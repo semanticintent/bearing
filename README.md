@@ -27,12 +27,16 @@ The alternative — a server that talks to SQL and Exchange and the wiki directl
 
 ## Build and run
 
+Nothing here is Windows-specific — `dotnet build`/`dotnet run` work as-is on Windows, macOS, and Linux.
+
 ```bash
-dotnet build
-dotnet run --project Bearing.Mcp -- --corpus C:\dev\bearing-corpus
+dotnet build Bearing.sln
+dotnet run --project Bearing.Mcp -- --corpus /path/to/bearing-corpus
 ```
 
 Corpus root resolves from `--corpus`, then `BEARING_CORPUS`, then `./corpus`.
+
+For a single-file publish targeting one specific machine, pass the RID at publish time — see the comment in `Bearing.Mcp.csproj`.
 
 ### Wire into Claude CLI
 
@@ -40,12 +44,14 @@ Corpus root resolves from `--corpus`, then `BEARING_CORPUS`, then `./corpus`.
 {
   "mcpServers": {
     "bearing": {
-      "command": "C:\\tools\\bearing\\bearing-mcp.exe",
-      "args": ["--corpus", "C:\\dev\\bearing-corpus"]
+      "command": "/path/to/bearing-mcp",
+      "args": ["--corpus", "/path/to/bearing-corpus"]
     }
   }
 }
 ```
+
+(On Windows, that's `bearing-mcp.exe` and backslash paths — same shape otherwise.)
 
 Verify with the MCP Inspector before wiring it in: `npx @modelcontextprotocol/inspector`.
 
@@ -125,10 +131,16 @@ In-process, no IPC, no latency. The popup becomes one client of something that o
 
 **A resident service.** The corpus is single-digit megabytes and indexes in under a second. Every consumer builds its own in memory. Nothing to keep alive, nothing to secure, nothing to be down.
 
+## Tests and CI
+
+`Bearing.Core.Tests` (xUnit) covers front-matter parsing, BM25 chunking/ranking/origin-filtering/truncation, and `Corpus` (loading, health/staleness thresholds, producer-state attachment) against real files on disk. `.github/workflows/ci.yml` builds and tests on a matrix of `ubuntu-latest`, `windows-latest`, and `macos-latest` on every push — Bearing has no OS-specific code, and CI is what keeps that true.
+
 ## Verify before trusting
 
-Written against documented API shapes but not built or run — no Windows and no NuGet access here.
+Beyond the unit suite, this has been run for real (not just built): `Bearing.Mcp` loads a corpus, answers a live MCP `initialize` → `tools/list` → `tools/call` exchange correctly (`search_context` ranks by relevance, `get_document` returns full text, `context_health` correctly flags a stale origin), and writes nothing but JSON-RPC frames to stdout — confirmed byte-for-byte, not just by reading `Program.cs`.
 
-- `ModelContextProtocol` was at 1.4.0 as of early July 2026 and the SDK moves quickly. Check the current version and the `AddMcpServer().WithStdioServerTransport().WithToolsFromAssembly()` shape against the SDK docs before assuming the wiring compiles.
+Still worth checking:
+
+- `ModelContextProtocol` was at 1.4.0 as of early July 2026 and the SDK moves quickly. Check the current version and the `AddMcpServer().WithStdioServerTransport().WithToolsFromAssembly()` shape against the SDK docs before assuming a newer version behaves identically.
 - .NET 10 ships a `dotnet new mcpserver` template that may be a cleaner starting point than this hand-rolled host.
 - **Never write to stdout.** Stdout carries JSON-RPC frames; anything else there corrupts the protocol and the client fails with an opaque parse error. Logging is pinned to stderr in `Program.cs` — keep it that way, and be careful with any library that logs on its own.

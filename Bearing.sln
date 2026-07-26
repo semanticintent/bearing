@@ -6,6 +6,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bearing.Core", "Bearing.Cor
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bearing.Mcp", "Bearing.Mcp\Bearing.Mcp.csproj", "{9A1B7C3D-1111-4E2A-8B0A-000000000002}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bearing.Core.Tests", "Bearing.Core.Tests\Bearing.Core.Tests.csproj", "{9A1B7C3D-1111-4E2A-8B0A-000000000003}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -20,5 +22,9 @@ Global
 		{9A1B7C3D-1111-4E2A-8B0A-000000000002}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9A1B7C3D-1111-4E2A-8B0A-000000000002}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9A1B7C3D-1111-4E2A-8B0A-000000000002}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9A1B7C3D-1111-4E2A-8B0A-000000000003}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9A1B7C3D-1111-4E2A-8B0A-000000000003}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9A1B7C3D-1111-4E2A-8B0A-000000000003}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9A1B7C3D-1111-4E2A-8B0A-000000000003}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

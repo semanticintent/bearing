@@ -7,10 +7,15 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>Bearing.Mcp</RootNamespace>
     <AssemblyName>bearing-mcp</AssemblyName>
-    <PublishSingleFile>true</PublishSingleFile>
-    <SelfContained>false</SelfContained>
-    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
   </PropertyGroup>
+
+  <!-- No RuntimeIdentifier pinned here on purpose: this server has no OS specific
+       code, so "dotnet build" and "dotnet run" stay portable across Windows, macOS,
+       and Linux. For a single file publish targeting one specific machine, pass
+       the RID explicitly at publish time, for example:
+         dotnet publish -c Release -r win-x64 -p:SelfContained=false -p:PublishSingleFile=true
+         dotnet publish -c Release -r osx-arm64 -p:SelfContained=false -p:PublishSingleFile=true
+         dotnet publish -c Release -r linux-x64 -p:SelfContained=false -p:PublishSingleFile=true -->
 
   <ItemGroup>
     <PackageReference Include="ModelContextProtocol" Version="1.4.0" />
