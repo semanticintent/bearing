@@ -90,14 +90,18 @@ public sealed class Corpus : IDisposable
             try { raw = File.ReadAllText(file); }
             catch (IOException) { continue; }   // mid-write during a producer run
 
-            var relative = Path.GetRelativePath(_options.CorpusRoot, file);
+            // Normalised to forward slashes regardless of OS: this is the form shown
+            // in get_document's own examples and in every producer-contract doc, and
+            // it must round-trip through Find() the same way on Windows as anywhere
+            // else, not just on whichever OS indexed the corpus.
+            var relative = Path.GetRelativePath(_options.CorpusRoot, file).Replace('\\', '/');
             var (meta, body) = FrontMatter.Split(raw, relative);
 
             // Folder name is a sensible default origin, so a producer that
             // forgets front matter still lands somewhere useful.
             if (meta.Origin == "unknown")
             {
-                var folder = Path.GetDirectoryName(relative)?.Split(Path.DirectorySeparatorChar).FirstOrDefault();
+                var folder = relative.Contains('/') ? relative[..relative.IndexOf('/')] : null;
                 if (!string.IsNullOrWhiteSpace(folder))
                     meta = new FrontMatter
                     {
