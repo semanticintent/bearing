@@ -50,8 +50,8 @@ tags: [catalog, core]
   "producer": "sqlgen",
   "lastRun": "2026-07-24T06:12:00Z",
   "success": true,
-  "documentCount": 63,
-  "message": "PROD schema, post-deploy hook, release 2026.7.3"
+  "documentCount": 48,
+  "message": "Catalog schema, post-deploy hook, release 2026.7.3"
 }
 ```
 
