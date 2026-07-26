@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>Bearing.Core</RootNamespace>
+  </PropertyGroup>
+
+  <!-- No NuGet references. Referenced by the MCP server, the CLI, and GistCast
+       alike, so it stays dependency-free on purpose. -->
+
+</Project>
